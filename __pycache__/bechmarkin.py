@@ -6,51 +6,43 @@ class Benchmarking:
     def __init__(self):
         print('Benchmarking instanciado')
         self.mO = MetodosOrdenamiento()
-        arreglo = self.build_arreglo(10000)
+        self.resultados = []
 
-        print("\n--- Método: burbujaa ---")
+        tamanio = 10000
+        arreglo = self.build_arreglo(tamanio)
+
+        print("\n--- Método: burbuja ---")
         tarea1 = lambda: self.mO.sort_bubble(arreglo.copy())
-        tiempoM1 = self.contar_con_current_time_milles(tarea1)
-        tiempoN1 = self.contar_con_nano_time(tarea1)
-        print("Tiempo con milisegundos:", tiempoM1)
-        print("Tiempo con nano segundos:", tiempoN1)
+        tiempo = self.contar_con_current_time_milles(tarea1)
+        self.resultados.append((tamanio, "burbuja", tiempo))
+        print("Tiempo (ms):", tiempo)
 
-        print("\n--- Método: Burbja mejorado ---")
+        print("\n--- Método: burbuja_MEJORADO ---")
         tarea2 = lambda: self.mO.sort_burbuja_mejorado_optimizado(arreglo.copy())
-        tiempoM2 = self.contar_con_current_time_milles(tarea2)
-        tiempoN2 = self.contar_con_nano_time(tarea2)
-        print("Tiempo con milisegundos:", tiempoM2)
-        print("Tiempo con nano segundos:", tiempoN2)
+        tiempo = self.contar_con_current_time_milles(tarea2)
+        self.resultados.append((tamanio, "burbuja_MEJORADO", tiempo))
+        print("Tiempo (ms):", tiempo)
 
-        print("\n---Metodo: Seleccion----")
+        print("\n--- Método: Seleccion ---")
         tarea3 = lambda: self.mO.sort_seleccion(arreglo.copy())
-        tiempoM3 = self.contar_con_current_time_milles(tarea3)
-        tiempoN3 = self.contar_con_nano_time(tarea3)
-        print("Tiempo con milisegundos:", tiempoM3)
-        print("Tiempo con nanosegundos:", tiempoN3)
+        tiempo = self.contar_con_current_time_milles(tarea3)
+        self.resultados.append((tamanio, "Seleccion", tiempo))
+        print("Tiempo (ms):", tiempo)
 
-        print("\n ---Metodo: INsercion")
+        print("\n--- Método: shell ---")
         tarea4 = lambda: self.mO.sort_insertion(arreglo.copy())
-        tiempoM4=self.contar_con_current_time_milles(tarea4)
-        tiempoN4=self.contar_con_nano_time(tarea4)
-        print("TIempo condato con milisegundos:", tiempoM4)
-        print("tIempo contado con nanosegundos:", tiempoM4)
-
+        tiempo = self.contar_con_current_time_milles(tarea4)
+        self.resultados.append((tamanio, "shell", tiempo))
+        print("Tiempo (ms):", tiempo)
 
     def build_arreglo(self, tamaño):
-        arreglo = []  
-        for i in range(tamaño):
-            numero = random.randint(0, 99999)
-            arreglo.append(numero)
-        return arreglo
+        return [random.randint(0, 99999) for _ in range(tamaño)]
 
     def contar_con_current_time_milles(self, tarea):
         inicio = time.time()
         tarea()
         fin = time.time()
-        return (fin - inicio) * 1000  
-    def contar_con_nano_time(self, tarea):
-        inicio = time.time_ns()  
-        tarea()
-        fin = time.time_ns()
-        return fin - inicio
+        return (fin - inicio) * 1000  # tiempo en milisegundos
+
+    def get_resultados(self):
+        return self.resultados
